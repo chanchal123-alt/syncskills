@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Profile | SyncSkills</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/dashboard">SyncSkills</a>
+      <div class="d-flex">
+        <a class="btn btn-outline-light me-2" href="/dashboard">Dashboard</a>
+        <a class="btn btn-danger" href="/logout">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container my-5" style="max-width: 700px;">
+    <h1 class="mb-4 text-center">User Profile</h1>
+
+    <!-- Update Profile Form -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h4 class="card-title mb-3">Edit Profile</h4>
+        <form action="/profile" method="POST">
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              name="name"
+              value="<%= user.name %>"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              value="<%= user.email %>"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary">Update Profile</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Change Password Form -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h4 class="card-title mb-3">Change Password</h4>
+        <form method="POST" action="/change-password">
+          <div class="mb-3">
+            <input
+              type="password"
+              class="form-control"
+              name="currentPassword"
+              placeholder="Current Password"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <input
+              type="password"
+              class="form-control"
+              name="newPassword"
+              placeholder="New Password"
+              required
+            />
+          </div>
+
+          <% if (passwordError) { %>
+            <div class="alert alert-danger"><%= passwordError %></div>
+          <% } %>
+          <% if (passwordSuccess) { %>
+            <div class="alert alert-success"><%= passwordSuccess %></div>
+          <% } %>
+
+          <button type="submit" class="btn btn-warning">Change Password</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Profile Photo Upload -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h4 class="card-title mb-3">Profile Photo</h4>
+        <form action="/upload-photo" method="POST" enctype="multipart/form-data" class="d-flex align-items-center gap-3">
+          <input type="file" name="profilePic" accept="image/*" class="form-control" required />
+          <button type="submit" class="btn btn-secondary">Upload Photo</button>
+        </form>
+
+        <% if (user.profilePic) { %>
+          <div class="mt-3">
+            <img
+              src="/uploads/<%= user.profilePic %>"
+              alt="Profile Photo"
+              class="rounded-circle"
+              style="width: 100px; height: 100px; object-fit: cover;"
+            />
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Skills List with Edit/Delete -->
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h4 class="card-title mb-3">Your Skills</h4>
+
+        <% if (user.skills.length > 0) { %>
+          <ul class="list-group">
+            <% user.skills.forEach(skill => { %>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <strong><%= skill.title %></strong> — <%= skill.skillCategory && skill.skillCategory.trim() !== '' ? skill.skillCategory : "Uncategorized" %>
+                  %>
+                </div>
+                <div>
+                  <a href="/skills/edit/<%= skill._id %>" class="btn btn-sm btn-outline-primary me-2">Edit</a>
+                  <form action="/skills/delete/<%= skill._id %>" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this skill?');">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                  </form>
+                </div>
+              </li>
+            <% }) %>
+          </ul>
+        <% } else { %>
+          <p class="text-muted">No skills added yet.</p>
+        <% } %>
+
+        <div class="mt-3">
+          <a href="/skills/add" class="btn btn-success">Add New Skill</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="/dashboard" class="btn btn-outline-secondary">Back to Dashboard</a>
+    </div>
+  </div>
+
+</body>
+</html>
