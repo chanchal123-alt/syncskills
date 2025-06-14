@@ -34,9 +34,9 @@ mongoose
 
 
 
-// app.get("/", (req, res) => {
-//     res.send("SyncSkills backend running 🚀");
-// });
+app.get('/', (req, res) => {
+    res.redirect('/dashboard'); // or whatever route you want as homepage
+});
 
 
 app.listen(3000, () => console.log("🚀 Server running on port 3000"));
