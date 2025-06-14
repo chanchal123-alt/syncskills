@@ -35,7 +35,7 @@ mongoose
 
 
 app.get('/', (req, res) => {
-    res.redirect('/dashboard'); // or whatever route you want as homepage
+    res.redirect('/login'); // or res.render('home') if you have a home.ejs
 });
 
 
